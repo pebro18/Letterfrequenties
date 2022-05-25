@@ -1,8 +1,9 @@
 #include "MaxEntClassifier.h"
 
+
+// originele code van het optellen doet ongeveer hetzelfde als de functie execute_counter
 void MaxEntClassifier::input_counter(string& input)
 {
-
 	if (input.size() == 0) return;
 
 	for (size_t i = 0; i < input.size() - 1; i++)
@@ -14,6 +15,8 @@ void MaxEntClassifier::input_counter(string& input)
 	}
 }
 
+// met gebruik van de unigram en een meegegeven matrix wordt hier de kans berekent
+// en maakt er mee een nieuwe matrix aan van alle kansen
 vector<vector<float>> MaxEntClassifier::create_prob_matrix(vector<int>& unigram, vector<vector<int>>& input)
 {
 	vector<vector<float>> output = vector<vector<float>>(unigram.size(), std::vector<float>(unigram.size()));
@@ -21,16 +24,20 @@ vector<vector<float>> MaxEntClassifier::create_prob_matrix(vector<int>& unigram,
 	{
 		for (size_t j = 1; j < input[i].size(); j++)
 		{
+			// deze berekening is volgens mij nog niet correct
+			// maar door lichte tijdnood doe ik dit later
 			float prob_a = (float)input[i][j - 1] / (float)unigram[i];
 			float prob_b = (prob_a * ((float)input[i][j] / (float)unigram[i]));
 
-			output[i][j] = prob_a * prob_b;
+			output[i][j] = prob_b * prob_a;
 		}
 	}
 
 	return output;
 }
 
+// zet een 2d matrix om to een 1d lijst
+// deze functie telt alle verschillende letters op
 vector<int> MaxEntClassifier::normalize_bigram(vector<vector<int>>& input)
 {
 	vector<int> output = vector<int>(input.size());
@@ -46,16 +53,21 @@ vector<int> MaxEntClassifier::normalize_bigram(vector<vector<int>>& input)
 	return output;
 }
 
+
+// deze functie vergelijkt 2 bigrammen met elkaar
 float MaxEntClassifier::compare(vector<vector<int>>& input)
 {
+	// hier wordt voor beide matrixen een unigram gemaakt
 	vector<int> normalized_self = normalize_bigram(matrix);
 	vector<int> normalized_input = normalize_bigram(input);
 
+	// maakt van beide matrixen een kans matrix
 	vector<vector<float>> probabilty_matrix_self = create_prob_matrix(normalized_self, matrix);
 	vector<vector<float>> probabilty_matrix_input = create_prob_matrix(normalized_input, input);
 
 	unsigned int count = 0;
 
+	// vergelijkt de 2 matrixen en telt op hoevaak de meegegeven matrix een hogere kans heeft dan de klasse matrix
 	for (int i = 0; i < input.size(); i++)
 	{
 		for (int j = 0; j < input[i].size(); j++)
