@@ -49,5 +49,8 @@ int main()
 	float dutch_result = Dutch.compare(compare_weight);
 	float english_result = English.compare(compare_weight);
 
+	cout << "Dutch regels gevonden" << dutch_result << endl;
+	cout << "English regels gevonden" << english_result << endl;
+
 	return 0;
 }

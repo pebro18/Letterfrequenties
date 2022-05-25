@@ -54,23 +54,22 @@ float MaxEntClassifier::compare(vector<vector<int>>& input)
 	vector<vector<float>> probabilty_matrix_self = create_prob_matrix(normalized_self, matrix);
 	vector<vector<float>> probabilty_matrix_input = create_prob_matrix(normalized_input, input);
 
-	//vector<vector<double>> output_matrix = vector<vector<double>>(input.size(), vector<double>(input.size()));
+	unsigned int count = 0;
 
-	//for (int i = 0; i < input.size(); i++)
-	//{
-	//	for (int j = 0; j < input[i].size(); j++)
-	//	{
-	//		output_matrix[i][j] = 0;
+	for (int i = 0; i < input.size(); i++)
+	{
+		for (int j = 0; j < input[i].size(); j++)
+		{
+			float x = probabilty_matrix_self[i][j];
+			float y = probabilty_matrix_input[i][j];
 
-	//		for (int k = 0; k < input.size(); k++)
-	//		{
-	//			output_matrix[i][j] += (double)probabilty_matrix_self[i][k] * (double)probabilty_matrix_self[k][j];
-	//		}
-	//	}
-	//}
-
-
-	return 0;
+			if (probabilty_matrix_self[i][j] < probabilty_matrix_input[i][j])
+			{
+				count++;
+			}
+		}
+	}
+	return (float)count;
 }
 
 // deze functie categoriseerd elke lettercombinatie in een string en returns een dictionary met de hoeveelheid
